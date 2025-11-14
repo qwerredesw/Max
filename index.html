@@ -19,77 +19,162 @@
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
                    Roboto, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #6c63ff 0%, #1b1240 40%, #050215 100%);
+      background: #050215;
       color: #f5f5ff;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 16px;
       overflow: hidden;
+      position: relative;
     }
 
+    /* Фон страницы */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, #6c63ff 0%, #1b1240 40%, #050215 100%);
+      z-index: 0;
+    }
+
+    /* === основная плашка Liquid Glass === */
     .app-container {
       position: relative;
       width: 100%;
       max-width: 420px;
-      background: rgba(8, 5, 30, 0.9);
       border-radius: 24px;
-      padding: 24px 20px 28px;
+      padding: 28px 26px 32px;
       box-shadow:
         0 0 40px rgba(123, 97, 255, 0.35),
         0 0 80px rgba(0, 153, 255, 0.25);
-      border: 1px solid rgba(142, 106, 255, 0.5);
+      border: 1px solid rgba(142, 106, 255, 0.6);
+      overflow: hidden;
+      z-index: 2;
       backdrop-filter: blur(18px);
     }
 
+    /* фон внутри большой плашки с жидким стеклом */
+    .app-container::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background:
+        radial-gradient(circle at top, #6c63ff 0%, #1b1240 40%, #050215 100%);
+      filter: url(#cardGlass) blur(6px);
+      opacity: 0.75;
+      z-index: -2;
+    }
+
+    /* лёгкий “глянец” поверх */
+    .app-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(145deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(50, 20, 100, 0.65));
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      z-index: -1;
+    }
+
+    /* ДОП. свечения в углах (чисто для красоты) */
     .glow-orb {
       position: absolute;
       border-radius: 999px;
-      filter: blur(26px);
-      opacity: 0.6;
+      filter: blur(24px);
+      opacity: 0.75;
       pointer-events: none;
       z-index: -1;
     }
 
     .glow-orb.orb-1 {
-      width: 160px;
-      height: 160px;
+      width: 170px;
+      height: 170px;
       background: #7b61ff;
       top: -40px;
-      right: -30px;
+      right: -40px;
     }
 
     .glow-orb.orb-2 {
-      width: 180px;
-      height: 180px;
+      width: 200px;
+      height: 200px;
       background: #00c8ff;
       bottom: -60px;
-      left: -40px;
+      left: -50px;
     }
 
-    .logo-wrapper {
+    /* === БЛОК ЛОГОТИПА С ОТДЕЛЬНОЙ GLASS-ПЛАШКОЙ === */
+    .logo-section {
       display: flex;
       justify-content: center;
-      margin-bottom: 16px;
-      margin-top: 8px;
+      margin-bottom: 18px;
+    }
+
+    .logo-glass {
+      position: relative;
+      padding: 10px 26px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(180, 160, 255, 0.7);
+      box-shadow:
+        0 0 18px rgba(90, 70, 200, 0.6),
+        0 8px 20px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+    }
+
+    /* фон именно под логотип, со СВОИМ liquid glass */
+    .logo-glass::before {
+      content: "";
+      position: absolute;
+      inset: -30px;
+      background:
+        radial-gradient(circle at top, #7f63ff 0%, #4220aa 40%, #0a061c 100%);
+      filter: url(#logoGlass) blur(4px);
+      opacity: 0.85;
+      z-index: -2;
+    }
+
+    .logo-glass::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(130deg,
+          rgba(255, 255, 255, 0.25),
+          rgba(100, 60, 255, 0.1),
+          rgba(0, 0, 0, 0.35));
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      z-index: -1;
     }
 
     .logo {
-      width: 120px;
-      height: 120px;
-      max-width: 50vw;
+      width: 150px;
+      height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 0 18px rgba(124, 77, 255, 0.85));
+      filter:
+        drop-shadow(0 0 6px rgba(0,0,0,0.6))
+        drop-shadow(0 0 14px rgba(0,0,0,0.4));
+      z-index: 1;
     }
 
+    /* === текст “Установка…” и спиннер === */
     .status-row {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin: 10px 0 24px;
-      color: #cfd2ff;
+      margin: 6px 0 24px;
+      color: #e2e5ff;
       font-size: 16px;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
     }
 
     .loader {
@@ -111,8 +196,9 @@
       text-align: center;
       font-size: 12px;
       color: #9fa4ff;
-      opacity: 0.85;
-      margin-bottom: 18px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
     }
 
     .button-wrapper {
@@ -131,15 +217,20 @@
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(255, 61, 158, 0.7);
-      transition: 0.12s;
+      box-shadow:
+        0 0 20px rgba(255, 61, 158, 0.7),
+        0 6px 18px rgba(0, 0, 0, 0.7);
+      transition:
+        transform 0.1s ease-out,
+        box-shadow 0.15s ease-out,
+        filter 0.15s ease-out;
     }
 
     .cancel-btn:active {
       transform: scale(0.96);
     }
 
-    /* --- Анимация надписи --- */
+    /* === анимация надписи ХУЙ ТЕБЕ!!! === */
     #fuckText {
       position: fixed;
       top: 50%;
@@ -149,9 +240,9 @@
       font-size: 48px;
       font-weight: 900;
       text-shadow:
-          0 0 20px #ff2aff,
-          0 0 40px #8b00ff,
-          0 0 80px #6100ff;
+        0 0 20px #ff2aff,
+        0 0 40px #8b00ff,
+        0 0 80px #6100ff;
       opacity: 0;
       pointer-events: none;
       white-space: nowrap;
@@ -168,24 +259,49 @@
         transform: translate(-50%, -50%) scale(1.25);
       }
       60% {
-        transform: translate(-50%, -50%) scale(1);
         opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
       }
       100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.7);
       }
     }
+
+    @media (max-width: 360px) {
+      .app-container {
+        padding: 22px 18px 26px;
+        border-radius: 20px;
+      }
+
+      .logo {
+        width: 135px;
+      }
+
+      .logo-glass {
+        padding: 8px 20px;
+        min-width: 200px;
+      }
+
+      #fuckText {
+        font-size: 40px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <div class="page-bg"></div>
 
   <div class="app-container">
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
 
-    <div class="logo-wrapper">
-      <img src="max_logo.png" alt="Max Logo" class="logo">
+    <!-- отдельная стеклянная плашка для логотипа -->
+    <div class="logo-section">
+      <div class="logo-glass">
+        <img src="max_logo.png" alt="Max Logo" class="logo">
+      </div>
     </div>
 
     <div class="status-row">
@@ -202,14 +318,56 @@
         ✕ Отменить установку Max
       </button>
     </div>
-
   </div>
 
   <!-- звук -->
   <audio id="trollAudio" src="troll.mp3" preload="auto" loop></audio>
 
-  <!-- красивая надпись -->
+  <!-- надпись -->
   <div id="fuckText">ХУЙ ТЕБЕ!!!</div>
+
+  <!-- SVG-фильтры для Liquid Glass -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;">
+    <defs>
+      <!-- большой фон карточки -->
+      <filter id="cardGlass">
+        <feTurbulence type="fractalNoise"
+                      baseFrequency="0.008"
+                      numOctaves="3"
+                      seed="4"
+                      result="noise">
+          <animate attributeName="baseFrequency"
+                   dur="14s"
+                   values="0.006;0.011;0.006"
+                   repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic"
+                           in2="noise"
+                           scale="38"
+                           xChannelSelector="R"
+                           yChannelSelector="G" />
+      </filter>
+
+      <!-- отдельный, чуть более мягкий liquid glass под логотип -->
+      <filter id="logoGlass">
+        <feTurbulence type="fractalNoise"
+                      baseFrequency="0.01"
+                      numOctaves="2"
+                      seed="7"
+                      result="noise2">
+          <animate attributeName="baseFrequency"
+                   dur="10s"
+                   values="0.009;0.015;0.009"
+                   repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic"
+                           in2="noise2"
+                           scale="28"
+                           xChannelSelector="R"
+                           yChannelSelector="B" />
+      </filter>
+    </defs>
+  </svg>
 
   <script>
     const cancelBtn = document.getElementById('cancelBtn');
@@ -222,9 +380,9 @@
       audio.currentTime = 0;
       audio.play();
 
-      // Запуск анимации появления + исчезновения
+      // перезапуск анимации надписи
       fuckText.style.animation = "none";
-      void fuckText.offsetWidth; // сброс
+      void fuckText.offsetWidth;
       fuckText.style.animation = "fuckAnim 1.2s ease-out forwards";
     };
   </script>
