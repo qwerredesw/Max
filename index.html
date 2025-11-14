@@ -130,49 +130,51 @@
       color: #fff;
       font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.03em;
       cursor: pointer;
-      box-shadow:
-        0 0 20px rgba(255, 61, 158, 0.7),
-        0 6px 16px rgba(0, 0, 0, 0.55);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      position: relative;
-      overflow: hidden;
-      transition:
-        transform 0.08s ease-out,
-        box-shadow 0.12s ease-out,
-        filter 0.12s ease-out,
-        background 0.18s ease-out;
-    }
-
-    .cancel-btn:before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.35), transparent 55%);
-      opacity: 0;
-      transition: opacity 0.2s ease-out;
-    }
-
-    .cancel-btn:hover {
-      filter: brightness(1.05);
-      box-shadow:
-        0 0 26px rgba(255, 61, 158, 0.85),
-        0 8px 20px rgba(0, 0, 0, 0.7);
-    }
-
-    .cancel-btn:hover:before {
-      opacity: 1;
+      box-shadow: 0 0 20px rgba(255, 61, 158, 0.7);
+      transition: 0.12s;
     }
 
     .cancel-btn:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow:
-        0 0 18px rgba(255, 61, 158, 0.6),
-        0 3px 10px rgba(0, 0, 0, 0.7);
+      transform: scale(0.96);
+    }
+
+    /* --- Анимация надписи --- */
+    #fuckText {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.2);
+      color: #ff2aff;
+      font-size: 48px;
+      font-weight: 900;
+      text-shadow:
+          0 0 20px #ff2aff,
+          0 0 40px #8b00ff,
+          0 0 80px #6100ff;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 9999;
+    }
+
+    @keyframes fuckAnim {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+      }
+      40% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.25);
+      }
+      60% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.7);
+      }
     }
   </style>
 </head>
@@ -203,17 +205,27 @@
 
   </div>
 
+  <!-- звук -->
   <audio id="trollAudio" src="troll.mp3" preload="auto" loop></audio>
+
+  <!-- красивая надпись -->
+  <div id="fuckText">ХУЙ ТЕБЕ!!!</div>
 
   <script>
     const cancelBtn = document.getElementById('cancelBtn');
     const audio = document.getElementById('trollAudio');
+    const fuckText = document.getElementById('fuckText');
 
     audio.volume = 1.0;
 
     cancelBtn.onclick = () => {
       audio.currentTime = 0;
       audio.play();
+
+      // Запуск анимации появления + исчезновения
+      fuckText.style.animation = "none";
+      void fuckText.offsetWidth; // сброс
+      fuckText.style.animation = "fuckAnim 1.2s ease-out forwards";
     };
   </script>
 
